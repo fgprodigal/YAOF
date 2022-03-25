@@ -21,10 +21,14 @@ remove_nat_rule() {
 create_nat_rule() {
   remove_nat_rule
 <<<<<<< HEAD
+<<<<<<< HEAD
   iptables -t nat -I PREROUTING 1 -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j RETURN
 =======
   iptables -t nat -I PREROUTING 1 -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j `uci -q get blockp2p.@settings[0].action`
 >>>>>>> 03675d3 (Update blockp2p)
+=======
+  iptables -t nat -I PREROUTING 1 -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j RETURN
+>>>>>>> 68cdebd (Update blockp2p)
 }
 
 remove_mangle_rule() {

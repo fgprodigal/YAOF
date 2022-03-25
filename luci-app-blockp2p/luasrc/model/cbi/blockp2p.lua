@@ -7,6 +7,11 @@ enable = s:option(Flag, "enable", translate("Enable"))
 enable.default = 1
 enable.rmempty = false
 
+action = s:option(ListValue, "action", translate("Action"))
+action:depends('enable', '1')
+action:value('RETURN', 'RETURN')
+action:value('ACCEPT', 'ACCEPT')
+
 filter = s:option(MultiValue, "filter", translate("Filter"))
 filter:depends('enable', '1')
 filter.default = '--edk --kazaa --gnu --bit --apple --winmx'
@@ -24,8 +29,8 @@ filter:value('--xdcc', 'XDCC packets (only xdcc login)')
 
 local apply = luci.http.formvalue("cbi.apply")
 if apply then
-    luci.sys.exec("rm -f /tmp/iptables_nat_sum")
-    luci.sys.exec("rm -f /tmp/iptables_mangle_sum")
+    luci.sys.exec("cat /dev/null > /tmp/iptables_nat_sum")
+    luci.sys.exec("cat /dev/null > /tmp/iptables_mangle_sum")
     luci.sys.exec("/etc/init.d/blockp2p enable")
     luci.sys.exec("/etc/init.d/blockp2p restart")
 end

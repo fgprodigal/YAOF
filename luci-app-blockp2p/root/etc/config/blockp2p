@@ -1,3 +1,4 @@
 config settings
         option enable '1'
         option filter '--edk --kazaa --gnu --bit --apple --winmx'
+        option action 'RETURN'

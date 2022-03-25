@@ -1,19 +1,26 @@
 #!/bin/bash
+remove_filter_rule() {
+  for i in $(iptables -L forwarding_rule --line-numbers | grep ipp2p | sort -r | awk '{ print $1 }')
+  do
+    iptables -D forwarding_rule $i 2>/dev/null
+  done
+}
+
+create_filter_rule() {
+  remove_filter_rule
+  iptables -I forwarding_rule 1 -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j `uci -q get blockp2p.@settings[0].action`
+}
+
 remove_nat_rule() {
   for i in $(iptables -t nat -L PREROUTING --line-numbers | grep ipp2p | sort -r | awk '{ print $1 }')
   do
     iptables -t nat -D PREROUTING $i 2>/dev/null
   done
-  for i in $(iptables -t nat -L OUTPUT --line-numbers | grep ipp2p | sort -r | awk '{ print $1 }')
-  do
-    iptables -t nat -D OUTPUT $i 2>/dev/null
-  done
 }
 
 create_nat_rule() {
   remove_nat_rule
-  iptables -t nat -I PREROUTING 1 -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j `uci -q get blockp2p.@settings[0].action`
-  iptables -t nat -I OUTPUT 1 -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j `uci -q get blockp2p.@settings[0].action`
+  iptables -t nat -I PREROUTING 1 -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j RETURN
 }
 
 remove_mangle_rule() {
@@ -25,40 +32,52 @@ remove_mangle_rule() {
 
 create_mangle_rule() {
   remove_mangle_rule
-  iptables -t mangle -I PREROUTING 1 -p udp -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j `uci -q get blockp2p.@settings[0].action`
+  iptables -t mangle -I PREROUTING 1 -p udp -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j RETURN
 }
 
 while [ 1 ]; do
   if [ "$(uci -q get blockp2p.@settings[0].enable)" != "1" ]; then
+    if [ -e /tmp/iptables_filter_sum ]; then
+      rm -f /tmp/iptables_filter_sum
+      remove_filter_rule
+    fi
     if [ -e /tmp/iptables_nat_sum ]; then
       rm -f /tmp/iptables_nat_sum
-      iptables -t nat -D PREROUTING $(iptables -t nat -L PREROUTING --line-numbers | grep ipp2p | awk '{ print $1 }') 2>/dev/null
-      iptables -t nat -D OUTPUT $(iptables -t nat -L OUTPUT --line-numbers | grep ipp2p | awk '{ print $1 }') 2>/dev/null
+      remove_nat_rule
     fi
     if [ -e /tmp/iptables_mangle_sum ]; then
       rm -f /tmp/iptables_mangle_sum
+      remove_mangle_rule
     fi
   else
+    touch /tmp/iptables_sum
+    filter_sum=`iptables -L -n | md5sum | awk '{print $1}'`
+    old_filter_sum=$(sed -n '1p' /tmp/iptables_sum)
+
     nat_sum=`iptables -t nat -L -n | md5sum | awk '{print $1}'`
-    touch /tmp/iptables_nat_sum
-    old_nat_sum=$(cat /tmp/iptables_nat_sum)
+    old_nat_sum=$(sed -n '2p' /tmp/iptables_sum)
 
-    touch /tmp/iptables_mangle_sum
     mangle_sum=`iptables -t mangle -L -n | md5sum | awk '{print $1}'`
-    old_mangle_sum=$(cat /tmp/iptables_mangle_sum)
+    old_mangle_sum=$(sed -n '3p' /tmp/iptables_sum)
 
+    if [ "$filter_sum" != "$old_filter_sum" ]; then
+      create_filter_rule
+    fi
+  
     if [ "$nat_sum" != "$old_nat_sum" ]; then
       create_nat_rule
-      echo $nat_sum > /tmp/iptables_nat_sum
     fi
 
     if [ "$mangle_sum" != "$old_mangle_sum" ]; then
       create_mangle_rule
-      echo $mangle_sum > /tmp/iptables_mangle_sum
     fi
+
+    echo $filter_sum > /tmp/iptables_sum
+    echo $nat_sum >> /tmp/iptables_sum
+    echo $mangle_sum >> /tmp/iptables_sum
   fi
 
-  sleep 5
+  sleep 5s
 done
 
 exit 0

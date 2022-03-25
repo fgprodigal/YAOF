@@ -1,4 +1,5 @@
 ### INITIALIZATION ###
+CONFIG_VERSION_MANUFACTURER="Ray"
 CONFIG_KERNEL_BUILD_DOMAIN="buildhost"
 CONFIG_KERNEL_BUILD_USER="builder"
 CONFIG_TARGET_x86=y
@@ -36,11 +37,12 @@ CONFIG_PACKAGE_dnsmasq_full_tftp=y
 CONFIG_PACKAGE_iptables-mod-fullconenat=y
 CONFIG_PACKAGE_ip6tables-mod-fullconenat=y
 CONFIG_PACKAGE_iptables-mod-nat-extra=y
+CONFIG_PACKAGE_iptables-mod-ipp2p=y
 CONFIG_PACKAGE_kmod-fs-f2fs=y
+CONFIG_PACKAGE_kmod-ipt-compat-xtables=y
 CONFIG_PACKAGE_kmod-ipt-nat6=y
+CONFIG_PACKAGE_kmod-ipt-ipp2p=y
 CONFIG_PACKAGE_kmod-tun=y
-#CONFIG_PACKAGE_kmod-shortcut-fe=y
-#CONFIG_PACKAGE_kmod-fast-classifier=y
 # CONFIG_PACKAGE_kmod-shortcut-fe-cm is not set
 CONFIG_PACKAGE_libiwinfo=y
 CONFIG_PACKAGE_libiwinfo-lua=y
@@ -73,6 +75,7 @@ CONFIG_LUCI_LANG_en=y
 # CONFIG_LUCI_CSSTIDY is not set
 # CONFIG_LUCI_JSMIN is not set
 CONFIG_PACKAGE_luci=y
+CONFIG_PACKAGE_luci-app-adbyby-plus=y
 CONFIG_PACKAGE_luci-app-firewall=y
 CONFIG_PACKAGE_luci-base=y
 CONFIG_PACKAGE_luci-compat=y
@@ -88,58 +91,47 @@ CONFIG_PACKAGE_luci-proto-ipv6=y
 CONFIG_PACKAGE_luci-proto-ppp=y
 
 ### APPLICATION ###
-#CONFIG_PACKAGE_luci-app-adguardhome=y
-#CONFIG_PACKAGE_adguardhome=y
-#CONFIG_PACKAGE_luci-app-chinadns-ng=y
-#CONFIG_PACKAGE_luci-app-dnsproxy=y
-#CONFIG_PACKAGE_luci-app-smartdns=y
 CONFIG_PACKAGE_luci-app-wireguard=y
-CONFIG_PACKAGE_luci-app-socat=y
 CONFIG_PACKAGE_luci-app-argon-config=y
 CONFIG_PACKAGE_luci-app-arpbind=y
 CONFIG_PACKAGE_luci-app-autoreboot=y
-#CONFIG_PACKAGE_luci-app-boostupnp=y
 CONFIG_PACKAGE_luci-app-mosdns=y
-#CONFIG_PACKAGE_luci-app-oaf=y
-CONFIG_PACKAGE_luci-app-cpufreq=y
-CONFIG_PACKAGE_luci-app-cpulimit=y
-CONFIG_PACKAGE_luci-app-ddns=y
+CONFIG_PACKAGE_luci-app-blockp2p=y
 CONFIG_PACKAGE_bind-host=y
 CONFIG_PACKAGE_ddns-scripts-cloudflare=y
 CONFIG_PACKAGE_ddns-scripts-dnspod=y
 CONFIG_PACKAGE_ddns-scripts-aliyun=y
-CONFIG_PACKAGE_luci-app-frpc=y
-CONFIG_PACKAGE_frpc=y
-CONFIG_PACKAGE_luci-app-frps=y
-CONFIG_PACKAGE_frps=y
-#CONFIG_PACKAGE_luci-app-jd-dailybonus=y
 CONFIG_PACKAGE_luci-app-openclash=y
 CONFIG_PACKAGE_luci-app-opkg=y
-#CONFIG_PACKAGE_luci-app-qbittorrent=y
 CONFIG_PACKAGE_luci-app-ramfree=y
-CONFIG_PACKAGE_luci-app-serverchan=y
-CONFIG_PACKAGE_luci-app-sqm=y
 CONFIG_PACKAGE_luci-app-vlmcsd=y
 CONFIG_PACKAGE_luci-app-vssr=y
 CONFIG_PACKAGE_luci-app-ssr-plus=y
 CONFIG_PACKAGE_luci-app-passwall=y
+CONFIG_PACKAGE_luci-app-passwall2=y
 CONFIG_PACKAGE_luci-app-unblockneteasemusic=y
 CONFIG_PACKAGE_luci-app-upnp=y
-CONFIG_PACKAGE_luci-app-usb-printer=y
 CONFIG_PACKAGE_luci-app-services-wolplus=y
-CONFIG_PACKAGE_luci-app-wrtbwmon=y
-CONFIG_PACKAGE_luci-app-xlnetacc=y
 CONFIG_PACKAGE_luci-app-zerotier=y
 CONFIG_PACKAGE_zerotier=y
 CONFIG_PACKAGE_coremark=y
 CONFIG_PACKAGE_htop=y
 CONFIG_PACKAGE_subconverter=y
-#CONFIG_PACKAGE_dnsproxy=y
-#CONFIG_PACKAGE_luci-app-dnsfilter=y
+
+# passwall Configuration
+# CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Brook is not set
+# CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Hysteria is not set
+# CONFIG_PACKAGE_luci-app-passwall_INCLUDE_IPv6_Nat is not set
+# CONFIG_PACKAGE_luci-app-passwall_INCLUDE_NaiveProxy is not set
+# CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Libev_Server is not set
+# CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Server is not set
+CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client=y
+CONFIG_PACKAGE_luci-app-passwall2_INCLUDE_Shadowsocks_Rust_Client=y
 
 ### THEME ###
 CONFIG_PACKAGE_luci-theme-argon=y
 CONFIG_PACKAGE_luci-theme-bootstrap=y
+CONFIG_PACKAGE_luci-theme-edge=y
 
 ### SHARE NETWORK ###
 CONFIG_PACKAGE_usbmuxd=y

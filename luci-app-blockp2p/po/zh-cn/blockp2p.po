@@ -1,0 +1,8 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Block P2P"
+msgstr "阻止P2P"
+
+msgid "Enable"
+msgstr "启用"

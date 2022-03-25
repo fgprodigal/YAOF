@@ -1,0 +1,61 @@
+#!/bin/bash
+create_nat_rule() {
+  iptables -t nat -N BLOCK_P2P 2>/dev/null
+  iptables -t nat -F BLOCK_P2P 2>/dev/null
+  iptables -t nat -A BLOCK_P2P -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j RETURN
+
+  iptables -t nat -D PREROUTING -m comment --comment "Block P2P" -j BLOCK_P2P 2>/dev/null
+  iptables -t nat -I PREROUTING 1 -m comment --comment "Block P2P" -j BLOCK_P2P
+  iptables -t nat -D OUTPUT -m comment --comment "Block P2P" -j BLOCK_P2P 2>/dev/null
+  iptables -t nat -I OUTPUT 1 -m comment --comment "Block P2P" -j BLOCK_P2P
+}
+
+create_mangle_rule() {
+  iptables -t mangle -N BLOCK_P2P 2>/dev/null
+  iptables -t mangle -F BLOCK_P2P 2>/dev/null
+  iptables -t mangle -A BLOCK_P2P -p udp -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j RETURN
+
+  iptables -t mangle -D PREROUTING -m comment --comment "Block P2P" -j BLOCK_P2P 2>/dev/null
+  iptables -t mangle -I PREROUTING 1 -m comment --comment "Block P2P" -j BLOCK_P2P
+}
+
+while [ 1 ]; do
+  if [ "$(uci -q get blockp2p.@settings[0].enable)" != "1" ]; then
+    if [ $(iptables -t nat --list BLOCK_P2P --line-numbers | sed '/^num\|^$\|^Chain/d' | wc -l) -gt 0 ]; then
+      iptables -t nat -F BLOCK_P2P 2>/dev/null
+    fi
+    if [ $(iptables -t mangle --list BLOCK_P2P --line-numbers | sed '/^num\|^$\|^Chain/d' | wc -l) -gt 0 ]; then
+      iptables -t mangle -F BLOCK_P2P 2>/dev/null
+    fi
+    if [ -e /tmp/iptables_nat_sum ]; then
+      rm -f /tmp/iptables_nat_sum
+      iptables -t nat -X BLOCK_P2P 2>/dev/null
+    fi
+    if [ -e /tmp/iptables_mangle_sum ]; then
+      rm -f /tmp/iptables_mangle_sum
+      iptables -t mangle -X BLOCK_P2P 2>/dev/null
+    fi
+  else
+    nat_sum=`iptables -t nat -L -n | md5sum | awk '{print $1}'`
+    touch /tmp/iptables_nat_sum
+    old_nat_sum=$(cat /tmp/iptables_nat_sum)
+
+    touch /tmp/iptables_mangle_sum
+    mangle_sum=`iptables -t mangle -L -n | md5sum | awk '{print $1}'`
+    old_mangle_sum=$(cat /tmp/iptables_mangle_sum)
+
+    if [ "$nat_sum" != "$old_nat_sum" ]; then
+      create_nat_rule
+      echo $nat_sum > /tmp/iptables_nat_sum
+    fi
+
+    if [ "$mangle_sum" != "$old_mangle_sum" ]; then
+      create_mangle_rule
+      echo $mangle_sum > /tmp/iptables_mangle_sum
+    fi
+  fi
+
+  sleep 5
+done
+
+exit 0

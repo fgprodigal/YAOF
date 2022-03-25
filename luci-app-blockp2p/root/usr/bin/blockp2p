@@ -20,7 +20,11 @@ remove_nat_rule() {
 
 create_nat_rule() {
   remove_nat_rule
+<<<<<<< HEAD
   iptables -t nat -I PREROUTING 1 -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j RETURN
+=======
+  iptables -t nat -I PREROUTING 1 -m ipp2p `uci -q get blockp2p.@settings[0].filter` -j `uci -q get blockp2p.@settings[0].action`
+>>>>>>> 03675d3 (Update blockp2p)
 }
 
 remove_mangle_rule() {
@@ -50,9 +54,15 @@ while [ 1 ]; do
       remove_mangle_rule
     fi
   else
+<<<<<<< HEAD
     touch /tmp/iptables_sum
     filter_sum=`iptables -L -n | md5sum | awk '{print $1}'`
     old_filter_sum=$(sed -n '1p' /tmp/iptables_sum)
+=======
+    touch /tmp/iptables_filter_sum
+    filter_sum=`iptables -L -n | md5sum | awk '{print $1}'`
+    old_filter_sum=$(cat /tmp/iptables_filter_sum)
+>>>>>>> 03675d3 (Update blockp2p)
 
     nat_sum=`iptables -t nat -L -n | md5sum | awk '{print $1}'`
     old_nat_sum=$(sed -n '2p' /tmp/iptables_sum)
@@ -62,6 +72,10 @@ while [ 1 ]; do
 
     if [ "$filter_sum" != "$old_filter_sum" ]; then
       create_filter_rule
+<<<<<<< HEAD
+=======
+      echo $filter_sum > /tmp/iptables_filter_sum
+>>>>>>> 03675d3 (Update blockp2p)
     fi
   
     if [ "$nat_sum" != "$old_nat_sum" ]; then

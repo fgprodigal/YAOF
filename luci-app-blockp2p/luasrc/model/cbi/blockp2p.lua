@@ -11,6 +11,8 @@ action = s:option(ListValue, "action", translate("Action"))
 action:depends('enable', '1')
 action:value('RETURN', 'RETURN')
 action:value('ACCEPT', 'ACCEPT')
+action:value('DROP', 'DROP')
+action:value('REJECT', 'REJECT')
 
 filter = s:option(MultiValue, "filter", translate("Filter"))
 filter:depends('enable', '1')
@@ -29,6 +31,7 @@ filter:value('--xdcc', 'XDCC packets (only xdcc login)')
 
 local apply = luci.http.formvalue("cbi.apply")
 if apply then
+    io.popen("cat /dev/null > /tmp/iptables_filter_sum")
     io.popen("cat /dev/null > /tmp/iptables_nat_sum")
     io.popen("cat /dev/null > /tmp/iptables_mangle_sum")
 end

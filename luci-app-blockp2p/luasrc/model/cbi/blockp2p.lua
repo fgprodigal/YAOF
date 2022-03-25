@@ -29,10 +29,8 @@ filter:value('--xdcc', 'XDCC packets (only xdcc login)')
 
 local apply = luci.http.formvalue("cbi.apply")
 if apply then
-    luci.sys.exec("cat /dev/null > /tmp/iptables_nat_sum")
-    luci.sys.exec("cat /dev/null > /tmp/iptables_mangle_sum")
-    luci.sys.exec("/etc/init.d/blockp2p enable")
-    luci.sys.exec("/etc/init.d/blockp2p restart")
+    io.popen("cat /dev/null > /tmp/iptables_nat_sum")
+    io.popen("cat /dev/null > /tmp/iptables_mangle_sum")
 end
 
 return mp

@@ -1,0 +1,11 @@
+#!/bin/sh
+uci -q batch <<-EOF >/dev/null
+delete ucitrack.@blockp2p[-1]
+add ucitrack blockp2p
+set ucitrack.@blockp2p[-1].init=blockp2p
+commit ucitrack
+EOF
+
+rm -rf /tmp/iptables_sum
+
+exit 0

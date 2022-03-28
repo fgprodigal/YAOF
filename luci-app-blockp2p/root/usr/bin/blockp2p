@@ -59,6 +59,7 @@ while [ 1 ]; do
     fi
   else
 <<<<<<< HEAD
+<<<<<<< HEAD
     touch /tmp/iptables_sum
     filter_sum=`iptables -L -n | md5sum | awk '{print $1}'`
     old_filter_sum=$(sed -n '1p' /tmp/iptables_sum)
@@ -67,6 +68,11 @@ while [ 1 ]; do
     filter_sum=`iptables -L -n | md5sum | awk '{print $1}'`
     old_filter_sum=$(cat /tmp/iptables_filter_sum)
 >>>>>>> 03675d3 (Update blockp2p)
+=======
+    touch /tmp/iptables_sum
+    filter_sum=`iptables -L -n | md5sum | awk '{print $1}'`
+    old_filter_sum=$(sed -n '1p' /tmp/iptables_sum)
+>>>>>>> c2467ec (Update)
 
     nat_sum=`iptables -t nat -L -n | md5sum | awk '{print $1}'`
     old_nat_sum=$(sed -n '2p' /tmp/iptables_sum)
@@ -77,9 +83,12 @@ while [ 1 ]; do
     if [ "$filter_sum" != "$old_filter_sum" ]; then
       create_filter_rule
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       echo $filter_sum > /tmp/iptables_filter_sum
 >>>>>>> 03675d3 (Update blockp2p)
+=======
+>>>>>>> c2467ec (Update)
     fi
   
     if [ "$nat_sum" != "$old_nat_sum" ]; then

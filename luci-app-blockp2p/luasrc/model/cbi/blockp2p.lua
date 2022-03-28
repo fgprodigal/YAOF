@@ -29,11 +29,4 @@ filter:value('--mute', 'Mute packets')
 filter:value('--waste', 'Waste packets')
 filter:value('--xdcc', 'XDCC packets (only xdcc login)')
 
-local apply = luci.http.formvalue("cbi.apply")
-if apply then
-    io.popen("cat /dev/null > /tmp/iptables_filter_sum")
-    io.popen("cat /dev/null > /tmp/iptables_nat_sum")
-    io.popen("cat /dev/null > /tmp/iptables_mangle_sum")
-end
-
 return mp

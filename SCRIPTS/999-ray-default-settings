@@ -2,7 +2,7 @@ uci set system.@system[-1].hostname='OpenWrt'
 uci commit system
 
 # 主题
-uci set luci.main.mediaurlbase='/luci-static/edge'
+uci set luci.main.mediaurlbase='/luci-static/argon'
 uci commit luci
 
 # ip地址

@@ -126,6 +126,9 @@ jobs:
           gzip -d *.gz && exit 0
           gzip --best *.img
           ls -Ahl
+          sha256sum openwrt*r4s* | tee R4S-GC404-$(date +%Y-%m-%d)-${{ env.latest_release }}.sha256sum
+          zip R4S-$(date +%Y-%m-%d)-${{ env.latest_release }}-ext4.zip *r4s*ext4*
+          zip R4S-$(date +%Y-%m-%d)-${{ env.latest_release }}-sfs.zip *r4s*squashfs*
       - name: Upload artifact
         uses: actions/upload-artifact@main
         with:
@@ -136,9 +139,9 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1.8.0
         with:
-          name: OpenWRT-${{ env.latest_release }}-${{ env.date_now }}
+          name: OpenWRT-${{ env.latest_release }}
           allowUpdates: true
-          tag: ${{ env.latest_release }}-${{ env.date_now }}
+          tag: ${{ env.latest_release }}
           commit: master
           replacesArtifacts: true
           token: ${{ secrets.workflow_token }}

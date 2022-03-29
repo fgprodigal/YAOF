@@ -165,3 +165,6 @@ CONFIG_LIBCURL_OPENSSL=y
 CONFIG_PACKAGE_kmod-drm-rockchip=y
 CONFIG_PACKAGE_kmod-drm-panfrost=y
 CONFIG_PACKAGE_kmod-multimedia-input=y
+
+# Wireless Drivers
+CONFIG_PACKAGE_kmod-mt76x2u=y

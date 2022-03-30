@@ -1,57 +1,34 @@
 #!/bin/sh
 
-grep -q 'OpenWrt Compiled by Ray' /etc/openwrt_release && exit 0
-
 uci set system.@system[-1].hostname='OpenWrt'
 uci commit system
 
 # 主题
-uci set luci.main.mediaurlbase='/luci-static/argon'
+uci set luci.main.mediaurlbase='/luci-static/edge'
 uci commit luci
 
 # ip地址
-uci del network.lan
-uci set network.lan=interface
-uci set network.lan.device='br-lan'   # 默认 IP 地址
-uci set network.lan.ipaddr='192.193.0.3'   # 默认 IP 地址
-uci set network.lan.proto='static'   # 静态 IP
-uci set network.lan.netmask='255.255.255.0' # 子网掩码
-uci set network.lan.gateway='192.193.0.1'   # 默认网关地址（主路由 IP）
-uci add_list network.lan.dns='192.193.0.1'  # 默认上游 DNS 地址
-uci commit network
+# uci del network.lan
+# uci set network.lan=interface
+# uci set network.lan.device='br-lan'   # 默认 IP 地址
+# uci set network.lan.ipaddr='192.193.0.3'   # 默认 IP 地址
+# uci set network.lan.proto='static'   # 静态 IP
+# uci set network.lan.netmask='255.255.255.0' # 子网掩码
+# uci set network.lan.gateway='192.193.0.1'   # 默认网关地址（主路由 IP）
+# uci add_list network.lan.dns='192.193.0.1'  # 默认上游 DNS 地址
+# uci commit network
 
-uci del dhcp.lan.ra
-uci del dhcp.lan.dhcpv6
-uci del dhcp.lan.ndp
-uci del dhcp.lan.ra_flags
-uci add_list dhcp.lan.ra_flags='none'
-uci set dhcp.lan.ignore='1'
-uci commit dhcp
+# uci del dhcp.lan.ra
+# uci del dhcp.lan.dhcpv6
+# uci del dhcp.lan.ndp
+# uci del dhcp.lan.ra_flags
+# uci add_list dhcp.lan.ra_flags='none'
+# uci set dhcp.lan.ignore='1'
+# uci commit dhcp
 
-# lan
-# uci del firewall.@zone[0].network
-# uci add_list firewall.@zone[0].network='lan'
-
-# wan
-# uci del firewall.@zone[1].network
-# uci add_list firewall.@zone[1].network='wan'
-# uci add_list firewall.@zone[1].network='wan6'
-# uci set firewall.@zone[1].input='ACCEPT'
-# uci set firewall.@zone[1].output='ACCEPT'
-# uci set firewall.@zone[1].forward='ACCEPT'
-
-uci del firewall.@defaults[0].syn_flood
-uci commit firewall
-
-# uhttpd
-uci set uhttpd.main.redirect_https=0
-uci commit uhttpd
-/etc/init.d/uhttpd restart
+# uci del firewall.@defaults[0].syn_flood
+# uci commit firewall
 
 echo "DISTRIB_DESCRIPTION='OpenWrt Compiled by Ray'" >> /etc/openwrt_release
-
-#清除 LuCI 残留缓存
-rm -rf /tmp/luci-modulecache
-rm -f /tmp/luci-indexcache
 
 exit 0

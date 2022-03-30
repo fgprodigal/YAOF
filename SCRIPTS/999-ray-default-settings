@@ -1,3 +1,7 @@
+#!/bin/sh
+
+grep -q 'OpenWrt Compiled by Ray' /etc/openwrt_release && exit 0
+
 uci set system.@system[-1].hostname='OpenWrt'
 uci commit system
 
@@ -44,7 +48,7 @@ uci set uhttpd.main.redirect_https=0
 uci commit uhttpd
 /etc/init.d/uhttpd restart
 
-echo "DISTRIB_DESCRIPTION='OpenWrt Compiled by Ray '" >> /etc/openwrt_release
+echo "DISTRIB_DESCRIPTION='OpenWrt Compiled by Ray'" >> /etc/openwrt_release
 
 #清除 LuCI 残留缓存
 rm -rf /tmp/luci-modulecache
